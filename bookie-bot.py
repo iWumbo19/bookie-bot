@@ -2,7 +2,7 @@
 import random
 # import discord.ext
 # from discord.utils import get
-from discord.ext import commands, tasks
+from discord.ext import commands
 # from discord.ext.commands import has_permissions, CheckFailure, check
 import lines
 import match
@@ -27,8 +27,8 @@ async def on_message(message):
         return
     name = str(message.author)
     match.author = name.split('#')[0]
-    #if match.author != "iWumbo19":
-        #return
+    # if match.author != "iWumbo19":
+    # return
     await bot.process_commands(message)
 
 
@@ -52,7 +52,7 @@ async def create(ctx, *args):
     match.matches.append(match.Match(red, blue, match.author))
 
 
-# Lists all matches in order to matchid
+# Lists all matches in order to matchId
 @bot.command()
 async def matches(ctx):
     if len(match.matches) == 0:
@@ -66,7 +66,7 @@ async def matches(ctx):
                        f"Created by: {item.creator} (Open Betting = {item.closed})")
 
 
-# Places bet based on matchid and corner color
+# Places bet based on matchId and corner color
 @bot.command()
 async def bet(ctx, *args):
     if len(args) == 1:
@@ -79,7 +79,7 @@ async def bet(ctx, *args):
         return
     try:  # Attempt to cast arg 0 and 1 to ints
         amount = int(args[0])
-        matchid = int(args[1])
+        matchId = int(args[1])
     except:  # Failure to cast arg 0 and 1 to ints
         await ctx.send(f"Couldn't make {args[0]} or {args[1]} into a number")
         return
@@ -90,12 +90,12 @@ async def bet(ctx, *args):
     if amount > match.max_bet:  # Check to see if bet exceeds max bet limit
         await ctx.send(f"Easy there big spender. Limit is 10000 for now")
         return
-    if matchid <= 0 or matchid > len(match.matches):  # Check to make sure matchid is within list limits
+    if matchId <= 0 or matchId > len(match.matches):  # Check to make sure matchId is within list limits
         await ctx.send("Match Id not find")
         return
 
     for item in match.matches:  # Run through list of match objects
-        if item.matchid == matchid:  # Find matching Id and update color
+        if item.matchid == matchId:  # Find matching ID and update color
             if item.closed:
                 await ctx.send("Betting has been closed for this event")
                 return
@@ -114,12 +114,12 @@ async def bet(ctx, *args):
                 return
 
 
-# Attempt to remove match based on author and matchid
+# Attempt to remove match based on author and matchId
 @bot.command()
 async def remove(ctx, *args):
     if len(args) == 1:
         if args[0] == "help":
-            await ctx.send("$remove <matchid>")
+            await ctx.send("$remove <matchId>")
             return
     try:
         id = int(args[0])
@@ -133,19 +133,19 @@ async def remove(ctx, *args):
     await ctx.send(f"Match {id} removed")
 
 
-# Reports current balance based on who asked
+# Reports current balance based on whom asked
 @bot.command()
-async def balance(ctx, *args):
+async def balance(ctx):
     await ctx.send(ah.get_balance())
 
 
-# Reports current MATCH wins based on who asked
+# Reports current MATCH wins based on whom asked
 @bot.command()
 async def wins(ctx):
     await ctx.send(ah.get_wins())
 
 
-# Reports current MATCH losses based on who asked
+# Reports current MATCH losses based on whom asked
 @bot.command()
 async def losses(ctx):
     await ctx.send(ah.get_losses())
