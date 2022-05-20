@@ -1,7 +1,7 @@
 import json
 import match
 
-
+# Function to retrieve balance from file
 def get_balance():
     f = open('accounts.json')
     accounts = json.load(f)
@@ -12,6 +12,7 @@ def get_balance():
     f.close()
 
 
+# Function to retrieve wins from file
 def get_wins():
     f = open('accounts.json')
     accounts = json.load(f)
@@ -22,6 +23,7 @@ def get_wins():
     f.close()
 
 
+# Function to retrieve losses from file
 def get_losses():
     f = open('accounts.json')
     accounts = json.load(f)
@@ -32,6 +34,7 @@ def get_losses():
     f.close()
 
 
+# Function to add new account to file
 def create_account():
     f = open('accounts.json')
     accounts = json.load(f)
@@ -47,6 +50,7 @@ def create_account():
     return f"Created account for {match.author}!\nHere's 10000 shtickcoin to start"
 
 
+# Class to help with json object formatting
 class Account:
     def __init__(self, name):
         self.name = name

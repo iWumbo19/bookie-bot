@@ -7,11 +7,13 @@ max_bet = 10000
 lowest_bet = 1
 
 
+# Method to seperate name from #DiscordID and sets match.author
 def clean_author(a):
     b = a.split('#')
     author = b[0]
 
 
+# Match object that holds all needed information for match handling
 class Match:
     def __init__(self, redcorner, bluecorner, creator):
         self.redcorner = redcorner

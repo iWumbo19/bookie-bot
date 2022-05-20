@@ -1,3 +1,5 @@
+# File to help with giving sentience to bookie-bot
+
 open_betting = [
     "This is looking to be a spicy one",
     "I've got my money on the hot one",
