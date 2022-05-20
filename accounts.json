@@ -1,0 +1,12 @@
+{
+    "Accounts": [
+        {
+            "name": "iWumbo19",
+            "coin": 10000,
+            "wins": 0,
+            "losses": 0,
+            "profit": 0,
+            "bankrupt": 0
+        }
+    ]
+}
