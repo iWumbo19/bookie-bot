@@ -34,7 +34,6 @@ class Match:
             self.blueodd = self.bluepot / self.redpot
             self.redodd = 1
 
-
     def payout_match(self, winner):
         f = open('accounts.json')
         accounts = json.load(f)

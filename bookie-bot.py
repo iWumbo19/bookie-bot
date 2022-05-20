@@ -1,9 +1,9 @@
-import discord
+# import discord
 import random
-import discord.ext
-from discord.utils import get
+# import discord.ext
+# from discord.utils import get
 from discord.ext import commands, tasks
-from discord.ext.commands import has_permissions, CheckFailure, check
+# from discord.ext.commands import has_permissions, CheckFailure, check
 import lines
 import match
 import ah
@@ -20,6 +20,7 @@ async def on_ready():
 
 
 # This code makes Schtick Bot ignore himself
+# Processes all commands once match.author has updated
 @bot.event
 async def on_message(message):
     if message.author == bot.user:
@@ -31,6 +32,10 @@ async def on_message(message):
     await bot.process_commands(message)
 
 
+# These are the commands that can be called with $<function name>
+# Each one begins with checking for $<command> help
+
+# Attempts to create a new event if all arguments pass checks
 @bot.command()
 async def create(ctx, *args):
     if len(args) == 1:
@@ -47,6 +52,7 @@ async def create(ctx, *args):
     match.matches.append(match.Match(red, blue, match.author))
 
 
+# Lists all matches in order to matchid
 @bot.command()
 async def matches(ctx):
     if len(match.matches) == 0:
@@ -60,6 +66,7 @@ async def matches(ctx):
                        f"Created by: {item.creator} (Open Betting = {item.closed})")
 
 
+# Places bet based on matchid and corner color
 @bot.command()
 async def bet(ctx, *args):
     if len(args) == 1:
@@ -107,6 +114,7 @@ async def bet(ctx, *args):
                 return
 
 
+# Attempt to remove match based on author and matchid
 @bot.command()
 async def remove(ctx, *args):
     if len(args) == 1:
@@ -125,32 +133,38 @@ async def remove(ctx, *args):
     await ctx.send(f"Match {id} removed")
 
 
+# Reports current balance based on who asked
 @bot.command()
 async def balance(ctx, *args):
     await ctx.send(ah.get_balance())
 
 
+# Reports current MATCH wins based on who asked
 @bot.command()
 async def wins(ctx):
     await ctx.send(ah.get_wins())
 
 
+# Reports current MATCH losses based on who asked
 @bot.command()
 async def losses(ctx):
     await ctx.send(ah.get_losses())
 
 
+# Attempts to create new account if none is present
 @bot.command()
 async def noob(ctx):
     await ctx.send(ah.create_account())
 
 
+# Help command (Need to figure out how to override built-in help function)
 @bot.command()
 async def helper(ctx):
     await ctx.send("Commands: create, matches, bet, remove, balance, wins, losses, noob\n"
                    "Be sure to use '$' before commands and use '$<command> help' for arguments")
 
 
+# A test command for iWumbo to ensure connection
 @bot.command()
 async def welcome(ctx):
     if match.author != "iWumbo19":
