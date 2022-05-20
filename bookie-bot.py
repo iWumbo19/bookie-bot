@@ -57,7 +57,7 @@ async def matches(ctx):
                        f"Red Corner: {item.redcorner}\n"
                        f"Blue Corner: {item.bluecorner}\n"
                        f"Odds are {item.redodd}:{item.blueodd} for a {item.redpot+item.bluepot} pot\n"
-                       f"Created by: {item.creator}")
+                       f"Created by: {item.creator} (Open Betting = {item.closed})")
 
 
 @bot.command()
@@ -89,6 +89,9 @@ async def bet(ctx, *args):
 
     for item in match.matches:  # Run through list of match objects
         if item.matchid == matchid:  # Find matching Id and update color
+            if item.closed:
+                await ctx.send("Betting has been closed for this event")
+                return
             if args[2] == "blue":  # Need to add update odd function when made
                 item.bluepot += amount
                 await ctx.send(f"{match.author} puts {amount} on {item.bluecorner}!\n"
@@ -114,6 +117,9 @@ async def remove(ctx, *args):
         id = int(args[0])
     except:
         await ctx.send("That aint a number fool")
+        return
+    if match.matches[id-1].creator != match.author:
+        await ctx.send("Only the creator of the event can remove it")
         return
     match.matches.remove(id - 1)
     await ctx.send(f"Match {id} removed")

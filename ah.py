@@ -71,10 +71,10 @@ class Account:
         self.backrupt += 1
 
     def dict_form(self):
-        dict = {"name": self.name,
+        out = {"name": self.name,
                 "coin": self.coin,
                 "wins": self.wins,
                 "losses": self.losses,
                 "profit": self.profit,
                 "bankrupt": self.backrupt}
-        return dict
+        return out
