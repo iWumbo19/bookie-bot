@@ -1,4 +1,5 @@
-import ah
+import random
+
 import json
 
 matches = []
@@ -13,6 +14,20 @@ def clean_author(a):
     author = b[0]
 
 
+def in_matches(temp_id):
+    for match in matches:
+        if match.matchid == temp_id:
+            return False
+    return True
+
+
+def generate_id():
+    x = random.randint(0,255)
+    while in_matches(x):
+        x = random.randint(0,255)
+    return x
+
+
 # Match object that holds all needed information for match handling
 class Match:
     def __init__(self, redcorner, bluecorner, creator):
@@ -23,7 +38,7 @@ class Match:
         self.redodd = 1.00
         self.blueodd = 1.00
         self.creator = creator
-        self.matchid = len(matches) + 1
+        self.matchid = generate_id()
         self.closed = False
         self.redbetters = {}
         self.bluebetters = {}

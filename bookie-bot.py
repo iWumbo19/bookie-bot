@@ -126,11 +126,13 @@ async def remove(ctx, *args):
     except:
         await ctx.send("That aint a number fool")
         return
-    if match.matches[id-1].creator != match.author:
-        await ctx.send("Only the creator of the event can remove it")
-        return
-    match.matches.remove(id - 1)
-    await ctx.send(f"Match {id} removed")
+    for count, event in enumerate, match.matches:
+        if event.matchid == id:
+            if event.creator != match.author:
+                await ctx.send("You aren't the creator of this event")
+                return
+            match.matches.remove(count)
+            await ctx.send(f"Match {id} removed")
 
 
 # Reports current balance based on whom asked
@@ -167,12 +169,12 @@ async def helper(ctx):
 # Method to payout match based on id
 @bot.command()
 async def payout(ctx, *args):
-    if len(args) != 1:
-        await ctx.send("Just tell me what match you're trying to close out")
+    if len(args) != 2:
+        await ctx.send("Need some real information from ya")
         return
 
     if args[0] == 'help':
-        await ctx.send("$payout <matchid>")
+        await ctx.send("$payout <matchid> <red/blue>")
         return
 
     try:  # Attempt to cast arg 0 to ints
@@ -181,11 +183,16 @@ async def payout(ctx, *args):
         await ctx.send(f"Couldn't make {args[0]} or {args[1]} into a number")
         return
 
-    if match.matches[args[0]].name != match.author:
-        await ctx.se("You aren't the one who created the match dumb dumb")
+    if args[1] != 'red' or args[1] != 'blue':
+        await ctx.send("Which corner won?")
         return
 
-    match.matches[matchId-1].payout_match(ctx, 'red')
+    for count, event in enumerate, match.matches:
+        if event.matchid == matchId:
+            if match.matches[count].name != match.author:
+                await ctx.se("You aren't the one who created the match dumb dumb")
+                return
+            match.matches[count].payout_match(ctx, 'red')
 
 
 # A test command for iWumbo to ensure connection
