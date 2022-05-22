@@ -50,6 +50,31 @@ def create_account():
     return f"Created account for {match.author}!\nHere's 10000 shtickcoin to start"
 
 
+def has_funds(amount):
+    f = open('accounts.json')
+    accounts = json.load(f)
+    for account in accounts['Accounts']:
+        if account['name'] == match.author:
+            if account['coin'] < amount:
+                return False
+    with open('accounts.json', 'w') as json_file:
+        json.dump(accounts, json_file,
+                  indent=4)
+    f.close()
+
+
+def remove_funds(amount):
+    f = open('accounts.json')
+    accounts = json.load(f)
+    for account in accounts['Accounts']:
+        if account['name'] == match.author:
+            account['coin'] -= amount
+    with open('accounts.json', 'w') as json_file:
+        json.dump(accounts, json_file,
+                  indent=4)
+    f.close()
+
+
 # Class to help with json object formatting
 class Account:
     def __init__(self, name):

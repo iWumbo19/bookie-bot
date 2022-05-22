@@ -94,17 +94,23 @@ async def bet(ctx, *args):
         await ctx.send("Match Id not find")
         return
 
+    if not ah.has_funds(amount):
+        await ctx.send("With what money?")
+        return
+
     for item in match.matches:  # Run through list of match objects
         if item.matchid == matchId:  # Find matching ID and update color
             if item.closed:
                 await ctx.send("Betting has been closed for this event")
                 return
             if args[2] == "blue":  # Need to add update odd function when made
+                ah.remove_funds()
                 item.bluepot += amount
                 await ctx.send(f"{match.author} puts {amount} on {item.bluecorner}!\n"
                                f"Odds are now {item.redodd}:{item.blueodd}")
                 return
             elif args[2] == "red":
+                ah.remove_funds()
                 item.redpot += amount
                 await ctx.send(f"{match.author} puts {amount} on {item.redcorner}!\n"
                                f"Odds are now {item.redodd}:{item.blueodd}")
