@@ -164,6 +164,30 @@ async def helper(ctx):
                    "Be sure to use '$' before commands and use '$<command> help' for arguments")
 
 
+# Method to payout match based on id
+@bot.command()
+async def payout(ctx, *args):
+    if len(args) != 1:
+        await ctx.send("Just tell me what match you're trying to close out")
+        return
+
+    if args[0] == 'help':
+        await ctx.send("$payout <matchid>")
+        return
+
+    try:  # Attempt to cast arg 0 to ints
+        matchId = int(args[0])
+    except:  # Failure to cast arg 0 to ints
+        await ctx.send(f"Couldn't make {args[0]} or {args[1]} into a number")
+        return
+
+    if match.matches[args[0]].name != match.author:
+        await ctx.se("You aren't the one who created the match dumb dumb")
+        return
+
+    match.matches[matchId-1].payout_match(ctx, 'red')
+
+
 # A test command for iWumbo to ensure connection
 @bot.command()
 async def welcome(ctx):

@@ -7,7 +7,7 @@ max_bet = 10000
 lowest_bet = 1
 
 
-# Method to seperate name from #DiscordID and sets match.author
+# Method to separate name from #DiscordID and sets match.author
 def clean_author(a):
     b = a.split('#')
     author = b[0]
@@ -36,31 +36,28 @@ class Match:
             self.blueodd = self.bluepot / self.redpot
             self.redodd = 1
 
-    def payout_match(self, winner):
+    async def payout_match(self, ctx, winner):
         f = open('accounts.json')
         accounts = json.load(f)
+        self.update_odds()
         for key in self.redbetters:
             for account in accounts['Accounts']:
                 if key == account['name']:
                     if winner == 'red':
-                        account['coin'] += self.redbetters[key]
+                        account['coin'] += self.redbetters[key] * (self.blueodd/self.redodd)
                         account['wins'] += 1
-                        account['profit'] += self.redbetters[key]
-                    else:
-                        account['coin'] -= self.redbetters[key]
-                        account['losses'] += 1
-                        account['profit'] -= self.redbetters[key]
+                        account['profit'] += self.redbetters[key] * (self.blueodd/self.redodd)
+                        await ctx.send(f"{account['name']} wins {self.redbetters[key] * (self.blueodd/self.redodd)}"
+                                       f" shtickcoin!")
         for key in self.bluebetters:
             for account in accounts['Accounts']:
                 if key == account['name']:
                     if winner == 'blue':
-                        account['coin'] += self.bluebetters[key]
+                        account['coin'] += self.bluebetters[key] * (self.redodd/self.blueodd)
                         account['wins'] += 1
-                        account['profit'] += self.bluebetters[key]
-                    else:
-                        account['coin'] -= self.bluebetters[key]
-                        account['losses'] += 1
-                        account['profit'] -= self.bluebetters[key]
+                        account['profit'] += self.bluebetters[key] * (self.redodd/self.blueodd)
+                        await ctx.send(f"{account['name']} wins {self.bluebetters[key] * (self.redodd/self.blueodd)}"
+                                       f" shtickcoin!")
         with open('accounts.json', 'w') as json_file:
             json.dump(accounts, json_file,
                       indent=4)
