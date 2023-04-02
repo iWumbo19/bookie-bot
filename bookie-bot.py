@@ -1,4 +1,4 @@
-# import discord
+import discord
 import random
 # import discord.ext
 # from discord.utils import get
@@ -47,9 +47,9 @@ async def create(ctx, *args):
         return
     red = args[0]
     blue = args[1]
+    match.add_match(red, blue)
     await ctx.send(f"Match between {red} and {blue} is now open for betting!")
     await ctx.send(lines.open_betting[random.randint(0, len(lines.open_betting) - 1)])
-    match.matches.append(match.Match(red, blue, match.author))
 
 
 # Lists all matches in order to matchId
@@ -90,11 +90,11 @@ async def bet(ctx, *args):
     if amount > match.max_bet:  # Check to see if bet exceeds max bet limit
         await ctx.send(f"Easy there big spender. Limit is 10000 for now")
         return
-    if matchId <= 0 or matchId > len(match.matches):  # Check to make sure matchId is within list limits
-        await ctx.send("Match Id not find")
+    if matchId <= 0 or matchId > 255:  # Check to make sure matchId is within list limits
+        await ctx.send("Match Id out of range")
         return
 
-    if not ah.has_funds(amount):
+    if ah.has_funds(amount):
         await ctx.send("With what money?")
         return
 
@@ -104,14 +104,16 @@ async def bet(ctx, *args):
                 await ctx.send("Betting has been closed for this event")
                 return
             if args[2] == "blue":  # Need to add update odd function when made
-                ah.remove_funds()
+                ah.remove_funds(amount)
                 item.bluepot += amount
+                item.update_odds()
                 await ctx.send(f"{match.author} puts {amount} on {item.bluecorner}!\n"
                                f"Odds are now {item.redodd}:{item.blueodd}")
                 return
             elif args[2] == "red":
-                ah.remove_funds()
+                ah.remove_funds(amount)
                 item.redpot += amount
+                item.update_odds()
                 await ctx.send(f"{match.author} puts {amount} on {item.redcorner}!\n"
                                f"Odds are now {item.redodd}:{item.blueodd}")
                 return
@@ -183,22 +185,33 @@ async def payout(ctx, *args):
         await ctx.send("$payout <matchid> <red/blue>")
         return
 
+    if args[1] != 'red' and args[1] != 'blue':
+        await ctx.send("Gotta tell me who won?")
+        return
+
     try:  # Attempt to cast arg 0 to ints
         matchId = int(args[0])
     except:  # Failure to cast arg 0 to ints
         await ctx.send(f"Couldn't make {args[0]} or {args[1]} into a number")
         return
 
-    if args[1] != 'red' or args[1] != 'blue':
+    if args[1] != 'red' and args[1] != 'blue':
         await ctx.send("Which corner won?")
         return
 
-    for count, event in enumerate, match.matches:
-        if event.matchid == matchId:
-            if match.matches[count].name != match.author:
-                await ctx.se("You aren't the one who created the match dumb dumb")
+    for count, event in enumerate(match.matches):
+        if event.matchid == matchId: # CANT FIGURE OUT WHY THIS ISNT WORKING
+            if match.matches[count].creator != match.author:
+                await ctx.send("You aren't the one who created the match dumb dumb")
                 return
-            match.matches[count].payout_match(ctx, 'red')
+            print(f"Paying out id {event.matchid} for {args[1]}")
+            match.matches[count].payout_match(args[1])
+    print("Couldn't find Match")
+
+
+@bot.command()
+async def close(ctx, *args):
+    pass
 
 
 # A test command for iWumbo to ensure connection
