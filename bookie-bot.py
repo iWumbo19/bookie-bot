@@ -219,7 +219,7 @@ async def close(ctx, *args):
 async def welcome(ctx):
     if match.author != "iWumbo19":
         return
-    await ctx.send("What up bitches! Time to lose your shirts")
+    await ctx.send("What up! Time to lose your shirts")
 
 
 if __name__ == '__main__':
